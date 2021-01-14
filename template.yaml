@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  python3.8
+
+  Sample SAM Template for lambda-deeplearning
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 30
+
+Resources:
+  InferenceFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      # ImageConfig:
+        # Uncomment this to override command here from the Dockerfile
+        # Command: ["app.lambda_handler"]
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./inference
+      DockerTag: tensorflow-inference-2.3.1-cpu-py37-ubuntu18.04
+
+Outputs:
+  InferenceFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt InferenceFunction.Arn
+  InferenceFunctionIamRole:
+    Description: "Implicit IAM Role created for Inference Function"
+    Value: !GetAtt InferenceFunctionRole.Arn
